@@ -20,9 +20,10 @@ app.post('/api', (req, res) => {
     });
 })
 
-app.put('/api', (req, res) => {
+app.put('/api/:id', (req, res) => {
     res.json({
-        type: 'PUT'
+        type: 'PUT',
+        id
     });
 })
 
