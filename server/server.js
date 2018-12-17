@@ -23,7 +23,7 @@ app.post('/api', (req, res) => {
 app.put('/api/:id', (req, res) => {
     res.json({
         type: 'PUT',
-        id
+        id: req.params.id
     });
 })
 
