@@ -6,7 +6,7 @@ const mongoose = require('mongoose');
 app.use(require('./routes/usuario'));
 
 
-mongoose.connect(process.env.NODE_ENV, { useNewUrlParser: true }, (err, res) => {
+mongoose.connect('mongodb://cafe-user:nolose1@ds063140.mlab.com:63140/cafe', { useNewUrlParser: true }, (err, res) => {
     if (err) throw err;
 
     console.log('Base de datos ONLINE');
