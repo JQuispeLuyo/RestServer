@@ -1,35 +1,20 @@
 require('./config/config');
 const express = require('express');
 const app = express();
+const mongoose = require('mongoose');
 
+app.use(require('./routes/usuario'));
+
+
+mongoose.connect(process.env.NODE_ENV, { useNewUrlParser: true }, (err, res) => {
+    if (err) throw err;
+
+    console.log('Base de datos ONLINE');
+});
 
 //setting
 // app.set('port', process.env.port || 3000);
-app.use(express.json());
 
-app.get('/api', (req, res) => {
-    res.json({ type: 'GET' });
-})
-
-app.post('/api', (req, res) => {
-    console.log(req.body);
-    res.json({
-        type: 'POST',
-        name: req.body.name,
-        lastname: req.body.lastname
-    });
-})
-
-app.put('/api/:id', (req, res) => {
-    res.json({
-        type: 'PUT',
-        id: req.params.id
-    });
-})
-
-app.delete('/api', (req, res) => {
-    res.json({ type: 'DELETE' });
-})
 
 app.listen(process.env.PORT, () => {
     console.log(`Servidor inciado en el puerto ${ process.env.PORT }`);
