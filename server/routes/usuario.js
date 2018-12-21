@@ -4,19 +4,18 @@ const app = express();
 const Usuario = require('../models/usuario');
 const bcrypt = require('bcrypt');
 const _ = require('underscore');
+const router = express.Router();
 
+const { verificaToken, verificaAdmin_Role } = require('../middlewares/autenticacion');
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-
-app.get('/api', async(req, res) => {
+router.get('/api', verificaToken, (req, res) => {
 
     let desde = req.query.desde || 0;
     desde = Number(desde);
     let limite = req.query.limite || 5;
     limite = Number(limite);
 
-    Usuario.find({ estado: true }, 'name email')
+    Usuario.find({ estado: true }, 'name email id role')
         .skip(desde)
         .limit(limite)
         .exec((err, usuarios) => {
@@ -34,24 +33,9 @@ app.get('/api', async(req, res) => {
                 })
             })
         })
-
-    // let lista = await Usuario.find({}, 'name email')
-    //     .skip(desde)
-    //     .limit(limite)
-    //     .exec();
-
-    // let num = await Usuario.count({});
-
-    // res.json({
-    //     ok: true,
-    //     usuarios: lista,
-    //     cuantos: num
-    // })
-
 })
 
-app.post('/api', (req, res) => {
-    console.log(req.body);
+router.post('/api', [verificaToken, verificaAdmin_Role], (req, res) => {
 
     let body = req.body;
 
@@ -79,7 +63,7 @@ app.post('/api', (req, res) => {
     })
 })
 
-app.put('/api/:id', (req, res) => {
+router.put('/api/:id', [verificaToken, verificaAdmin_Role], (req, res) => {
 
     let id = req.params.id;
     let body = _.pick(req.body, ['name', 'email', 'img', 'role', 'estado', ]);
@@ -103,7 +87,7 @@ app.put('/api/:id', (req, res) => {
     })
 })
 
-app.delete('/api/:id', (req, res) => {
+router.delete('/api/:id', [verificaToken, verificaAdmin_Role], (req, res) => {
 
     let id = req.params.id;
 
@@ -134,4 +118,4 @@ app.delete('/api/:id', (req, res) => {
     })
 })
 
-module.exports = app;
+module.exports = router;
